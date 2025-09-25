@@ -1,21 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import {
-  Apple,
-  Boxes,
-  ChevronDown,
-  ChevronLeft,
-  Menu,
-  Ruler,
-  Utensils,
-} from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Apple, Boxes, ChevronLeft, Menu, Ruler, Utensils } from "lucide-react";
 import { ReactNode, useState } from "react";
-import Link from "next/link";
+
+import { RouteGroup } from "./route-group";
+
+type DashboardLayoutProps = {
+  children: ReactNode;
+};
 
 type RouteGroupType = {
   group: string;
@@ -24,10 +19,6 @@ type RouteGroupType = {
     label: string;
     icon: ReactNode;
   }[];
-};
-
-type DashboardLayoutProps = {
-  children: ReactNode;
 };
 
 const ROUTE_GROUPS: RouteGroupType[] = [
@@ -62,54 +53,6 @@ const ROUTE_GROUPS: RouteGroupType[] = [
     ],
   },
 ];
-
-type RouteGroupProps = RouteGroupType;
-
-const RouteGroup = ({ group, items }: RouteGroupProps) => {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-
-  return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <Collapsible.Trigger asChild>
-        <Button
-          className="text-foreground/80 mb-2 flex w-full justify-between font-normal"
-          variant={"ghost"}
-        >
-          {group}
-          <div className={`transition-transform ${open ? "rotate-180" : ""} `}>
-            <ChevronDown />
-          </div>
-        </Button>
-      </Collapsible.Trigger>
-      <Collapsible.Content forceMount>
-        <motion.div
-          className={`flex flex-col gap-2 ${!open ? "pointer-events-none" : ""}`}
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          {items.map((item) => (
-            <Button
-              key={item.href}
-              className="w-full justify-start font-normal"
-              variant="link"
-              asChild
-            >
-              <Link
-                href={item.href}
-                className={`flex items-center rounded-md px-5 py-1 transition-all ${pathname === item.href ? "bg-foreground/10 hover:bg-foreground/5" : "hover:bg-foreground/10"}`}
-              >
-                {item.icon}
-                <span className="text-sm">{item.label}</span>
-              </Link>
-            </Button>
-          ))}
-        </motion.div>
-      </Collapsible.Content>
-    </Collapsible.Root>
-  );
-};
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [open, setOpen] = useState(false);
