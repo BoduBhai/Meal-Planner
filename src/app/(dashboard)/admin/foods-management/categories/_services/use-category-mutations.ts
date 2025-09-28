@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCategory } from "./categoryMutations";
+import {
+  createCategory,
+  deleteCategory,
+  updateCategory,
+} from "./categoryMutations";
 import { toast } from "sonner";
+import { CategorySchema } from "../_types/categorySchema";
 
 const useDeleteCategory = () => {
   const queryClient = useQueryClient();
@@ -16,4 +21,32 @@ const useDeleteCategory = () => {
   });
 };
 
-export { useDeleteCategory };
+const useCreateCateogry = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: CategorySchema) => {
+      await createCategory(data);
+    },
+    onSuccess: () => {
+      toast.success("Category created successfully");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+};
+
+const useUpdateCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: CategorySchema) => {
+      await updateCategory(data);
+    },
+    onSuccess: () => {
+      toast.success("Category created successfully");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+};
+
+export { useDeleteCategory, useCreateCateogry, useUpdateCategory };
